@@ -1,7 +1,7 @@
 # Variables
 CXX = g++
 CXXFLAGS = -std=c++11 -I./httplib -I./jwt-cpp/include
-LDFLAGS = -lcrypto -lssl
+LDFLAGS = -lcrypto -lssl -lsqlite3
 TARGET = jwks_server
 SOURCES = main.cpp
 
@@ -31,7 +31,12 @@ fetch:
 		git clone https://github.com/Thalhammer/jwt-cpp.git; \
 	fi
 
+	# Check if SQLite library exists, if not install it
+	@if ! ldconfig -p | grep -q sqlite3; then \
+		echo "SQLite3 library is not found. Please install SQLite3 manually."; \
+	fi
+
 clean:
-	rm -rf $(TARGET) httplib jwt-cpp
+	rm -rf $(TARGET) httplib jwt-cpp totally_not_my_privateKeys.db
 
 .PHONY: all fetch clean
